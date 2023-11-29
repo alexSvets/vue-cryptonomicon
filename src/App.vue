@@ -9,6 +9,8 @@
             </label>
             <div class="mt-1 relative rounded-md shadow-md">
               <input
+                v-model="ticker"
+                v-on:keydown.enter="add"
                 type="text"
                 name="wallet"
                 id="wallet"
@@ -19,6 +21,7 @@
           </div>
         </div>
         <button
+          v-on:click="add"
           type="button"
           class="my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
         >
@@ -38,18 +41,25 @@
           Добавить
         </button>
       </section>
-      <tempplate>
+      <tempplate v-if="tickers.length">
         <hr lass="w-full border-t border-gray-600 my-4" />
         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
           <div
+            v-for="t in tickers"
+            v-bind:key="t.name"
             class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
           >
             <div class="px-4 py-5 sm:p-6 text-center">
-              <dt class="text-sm font-medium text-gray-500 truncate">btc</dt>
-              <dd class="mt-1 text-3xl font-semibold text-gray-900">213213</dd>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                {{ t.name }}
+              </dt>
+              <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                {{ t.price }}
+              </dd>
             </div>
             <div class="w-full border-t border-gray-200"></div>
             <button
+              @click="handleDelete(t)"
               class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all focus:outline-none"
             >
               <svg
@@ -112,6 +122,27 @@
 <script>
 export default {
   name: "App",
+  data() {
+    return {
+      ticker: "default",
+      tickers: [
+        { name: "BTC", price: "23123" },
+        { name: "ETH", price: "56090" },
+        { name: "USD", price: "10689" },
+      ],
+    };
+  },
+  methods: {
+    add() {
+      const newTicker = { name: this.ticker, price: "23123" };
+      this.tickers.push(newTicker);
+      this.ticker = "";
+    },
+
+    handleDelete(tickerToRemove) {
+      this.tickers = this.tickers.filter((t) => t !== tickerToRemove);
+    },
+  },
 };
 </script>
 
